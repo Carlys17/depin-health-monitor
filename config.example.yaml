@@ -1,0 +1,20 @@
+# DePIN Health Monitor Configuration
+nodes:
+  - name: tashi-depin-worker
+    network: Tashi
+    type: docker
+    check_interval: 300  # seconds
+    
+  - name: dragonball-hunter
+    network: DragonBall
+    type: systemd
+    check_interval: 600
+
+alerts:
+  telegram:
+    enabled: false
+    bot_token: ""
+    chat_id: ""
+  webhook:
+    enabled: false
+    url: ""
