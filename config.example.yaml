@@ -1,20 +1,25 @@
-# DePIN Health Monitor Configuration
 nodes:
-  - name: tashi-depin-worker
-    network: Tashi
+  - name: optimai_crawl4ai_0_7_8
+    network: OptimAI
     type: docker
-    check_interval: 300  # seconds
-    
-  - name: dragonball-hunter
-    network: DragonBall
+  - name: nexus.service
+    network: Nexus
     type: systemd
-    check_interval: 600
+  - name: blockcast.service
+    network: Blockcast
+    type: systemd
+  - name: quip.service
+    network: Quip
+    type: systemd
+  - name: mawari.service
+    network: Mawari
+    type: systemd
 
 alerts:
   telegram:
-    enabled: false
-    bot_token: ""
-    chat_id: ""
+    enabled: true
+    bot_token: "${TG_BOT}"
+    chat_id: "${TG_CHAT}"
   webhook:
     enabled: false
     url: ""

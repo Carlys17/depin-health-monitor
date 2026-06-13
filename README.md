@@ -1,32 +1,47 @@
-# DePIN Health Monitor
+# depin-health-monitor
 
-Automated health monitoring for DePIN nodes. Checks uptime, sync status, and earnings across multiple networks.
+Real, working health monitor for a fleet of DePIN nodes. It:
 
-## Supported Networks
-- Blockcast BEACON
-- OptimAI Network
-- Quip Network
-- NARA Chain
-- Nexus Prover
+- Polls a YAML-configured set of nodes (docker or systemd)
+- Reports status transitions (healthy <-> degraded/unhealthy)
+- Posts to Telegram and/or a generic JSON webhook
+- Writes a `health.json` snapshot every cycle
+- Runs as a long-lived daemon or as a one-shot checker
 
-## Features
-- Real-time node status checking
-- Docker container health monitoring
-- Alert notifications (Telegram/webhook)
-- Historical uptime tracking
-- Earnings estimation
+## Files
 
-## Usage
-```bash
-python3 monitor.py --config config.yaml
-python3 monitor.py --check-all
-python3 monitor.py --telegram-alerts
-```
+| File | Purpose |
+|---|---|
+| `monitor.py` | core: `NodeHealth`, `DockerHealth`, `SystemdHealth`, `check_all`, `generate_report` |
+| `alerter.py`  | `TelegramAlerter` (with per-status throttling) + `WebhookAlerter` |
+| `daemon.py`   | long-running loop, YAML config, snapshot writer |
+| `config.example.yaml` | sample config for 5 DePIN nodes |
+| `nodes/__init__.py` `nodes/blockcast.py` `nodes/optimai.py` | per-network adapters |
+| `patterns.py` `flashbots.py` | extra helpers kept from earlier work |
+| `requirements.txt`, `README.md` | this file |
 
-## Setup
+## Quick start
+
 ```bash
 pip install -r requirements.txt
-cp config.example.yaml config.yaml
-# Edit config.yaml with your node details
-python3 monitor.py --init
+export TG_BOT=12345:abcdef...
+export TG_CHAT=1216419228
+
+# one-shot
+python3 daemon.py --once --config config.yaml
+
+# daemon
+python3 daemon.py --config config.yaml
 ```
+
+## Telegram message format
+
+```
+🔴 nexus.service (Nexus): `unhealthy`
+   service_status: inactive
+   since: Mon 2026-06-13 12:00:00 UTC
+```
+
+## License
+
+MIT

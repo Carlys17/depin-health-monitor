@@ -1,4 +1,6 @@
-venv/
 __pycache__/
-config.yaml
+*.py[cod]
+.env
+health.json
 *.log
+.DS_Store
